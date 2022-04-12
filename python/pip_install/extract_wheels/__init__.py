@@ -59,6 +59,12 @@ def main() -> None:
         description="Resolve and fetch artifacts transitively from PyPI"
     )
     parser.add_argument(
+        "--find-links",
+        type=str,
+        default=None,
+        help="Directory to look for archives such as sdist or wheel files.",
+    )
+    parser.add_argument(
         "--requirements",
         action="store",
         required=True,
@@ -82,6 +88,7 @@ def main() -> None:
         + (["--isolated"] if args.isolated else [])
         + ["wheel", "-r", args.requirements]
         + ["--wheel-dir", os.getcwd()]
+        + (["--find-links", "{}/../{}".format(os.getcwd(), args.find_links)] if args.find_links else [])
         + deserialized_args["extra_pip_args"]
     )
 

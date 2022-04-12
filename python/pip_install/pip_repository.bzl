@@ -160,6 +160,10 @@ def _pip_repository_impl(rctx):
             "--annotations",
             annotations_file,
         ]
+
+        # TODO: move this in to _parse_optional_attrs()
+        if rctx.attr.find_links:
+            args += ["--find-links", rctx.attr.find_links.workspace_name]
         progress_message = "Extracting wheels"
 
     args += ["--repo", rctx.attr.name, "--repo-prefix", rctx.attr.repo_prefix]
@@ -210,6 +214,12 @@ can be passed.
     ),
     "extra_pip_args": attr.string_list(
         doc = "Extra arguments to pass on to pip. Must not contain spaces.",
+    ),
+    "find_links": attr.label(
+        doc = """\
+The [--find-links](https://pip.pypa.io/en/stable/cli/pip_wheel/#cmdoption-f) to
+pass to the underlying pip command.
+""",
     ),
     "isolated": attr.bool(
         doc = """\
